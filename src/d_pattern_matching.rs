@@ -6,25 +6,44 @@
 
 /// Returns true if the last two strings in the vector start with `PBA`.
 pub fn match_1(input: Vec<String>) -> bool {
-	if !(input.len() < 2) {
-        input[input.len() - 1].starts_with("PBA") && input[input.len() - 2].starts_with("PBA")
-    } else {
-		false
+	// if !(input.len() < 2) {
+    //     input[input.len() - 1].starts_with("PBA") && input[input.len() - 2].starts_with("PBA")
+    // } else {
+	// 	false
+	// }
+
+	match input.len() {
+		len if len >= 2 => {
+			input[input.len() - 1].starts_with("PBA") && input[input.len() - 2].starts_with("PBA")
+		}
+		_ => false
 	}
 }
 
 /// Returns true if the first and last string in the vector start with `PBA`.
 pub fn match_2(input: Vec<String>) -> bool {
-	if !(input.len() < 2) {
-        input[0].starts_with("PBA") && input[input.len() - 1].starts_with("PBA")
-    } else {
-		false
+	// if !(input.len() < 2) {
+    //     input[0].starts_with("PBA") && input[input.len() - 1].starts_with("PBA")
+    // } else {
+	// 	false
+	// }
+
+	match input.len() {
+		len if len >= 2 => {
+			input[0].starts_with("PBA") && input[input.len() - 1].starts_with("PBA")
+		}
+		_ => false
 	}
 }
 
 /// Returns true if the first item in `input` is true.
 pub fn match_3(input: (bool, bool, bool)) -> bool {
-	input.0
+	//input.0
+
+	match input {
+		(true, _, _) => true,
+		_ => false
+	}
 }
 
 /// Returns true if the input is `Ok(x)` of some even `x`.
