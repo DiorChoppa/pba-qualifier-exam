@@ -185,7 +185,7 @@ pub fn answer_4_a() -> char {
 /// - d) `fn sort(items: &mut [T: PartialOrd]);`
 /// - e) `fn sort(items: &mut [T: Ord]);`
 pub fn answer_4_b() -> char {
-	'a'
+	'b'
 }
 
 /// ## Question 5
@@ -277,7 +277,7 @@ pub fn answer_6() -> char {
 /// - d) No, because the potential `ParseIntError` is never handled.
 /// - e) Yes, because the `?` operator implicitly performs a `.into()` before returning the error.
 pub fn answer_7() -> char {
-	'b'
+	'c'
 }
 
 /// This function is not graded. It is just for collecting feedback.

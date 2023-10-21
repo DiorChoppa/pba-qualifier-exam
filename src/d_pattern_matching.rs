@@ -13,7 +13,7 @@ pub fn match_1(input: Vec<String>) -> bool {
 	// }
 
 	match input.len() {
-		len if len >= 2 => {
+		len if len > 1 => {
 			input[input.len() - 1].starts_with("PBA") && input[input.len() - 2].starts_with("PBA")
 		}
 		_ => false
@@ -29,7 +29,7 @@ pub fn match_2(input: Vec<String>) -> bool {
 	// }
 
 	match input.len() {
-		len if len >= 2 => {
+		len if len > 1 => {
 			input[0].starts_with("PBA") && input[input.len() - 1].starts_with("PBA")
 		}
 		_ => false
@@ -39,26 +39,23 @@ pub fn match_2(input: Vec<String>) -> bool {
 /// Returns true if the first item in `input` is true.
 pub fn match_3(input: (bool, bool, bool)) -> bool {
 	//input.0
-
-	match input {
-		(true, _, _) => true,
-		_ => false
-	}
+	matches!(input.0, true)
 }
 
 /// Returns true if the input is `Ok(x)` of some even `x`.
 pub fn match_4(input: Result<u32, &'static str>) -> bool {
-	match input {
-		Ok(x) => x % 2 == 0,
-		Err(_) => false
-	}
+	// match input {
+	// 	Ok(x) => x % 2 == 0,
+	// 	Err(_) => false
+	// }
+	matches!(input, Ok(x) if x % 2 == 0)
 }
 
 /// This function is not graded. It is just for collecting feedback.
 /// On a scale from 0 - 255, with zero being extremely easy and 255 being extremely hard,
 /// how hard did you find this section of the exam.
 pub fn how_hard_was_this_section() -> u8 {
-	32
+	16
 }
 
 /// This function is not graded. It is just for collecting feedback.
