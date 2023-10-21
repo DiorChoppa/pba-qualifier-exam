@@ -22,7 +22,7 @@ pub struct Employee {
 
 impl PartialEq for Employee {
 	fn eq(&self, other: &Self) -> bool {
-		todo!("complete the implementation");
+		self.uid == other.uid
 	}
 }
 impl Eq for Employee {}
@@ -34,13 +34,19 @@ impl Eq for Employee {}
 
 impl PartialOrd for Employee {
 	fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-		todo!("complete the implementation");
+		if !self.eq(other) {
+			let left = self.experience / self.wage;
+			let right = other.experience / other.wage;
+			left.partial_cmp(&right)
+		} else {
+			Some(std::cmp::Ordering::Equal)
+		}
 	}
 }
 
 impl Ord for Employee {
 	fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-		todo!("complete the implementation");
+		self.partial_cmp(other).unwrap()
 	}
 }
 
@@ -59,14 +65,30 @@ impl TryFrom<String> for Employee {
 	type Error = &'static str;
 
 	fn try_from(value: String) -> Result<Self, Self::Error> {
-		todo!("complete the implementation");
+		let mut store: Vec<&str> = Vec::new();
+
+		for attr in value.split(",") {
+			store.push(attr.trim());
+		}
+
+		if store.len() == 4 {
+			let msg = String::from("Wrong data!");
+			let experience: u32 = store[1].parse().expect(&msg);
+			let wage: u32 = store[2].parse().expect(&msg);
+			let uid: u32 = store[3].parse().expect(&msg);
+	
+			Ok (Employee { name: store[0].to_string(), experience, wage, uid })
+		} else {
+			Err("Wrong number of attributes!")
+		}
+
 	}
 }
 
 // We also want to convert employees back into strings in the same format as above.
 impl From<Employee> for String {
 	fn from(e: Employee) -> Self {
-		todo!("complete the implementation");
+		format!("{}, {}, {}, {}", e.name, e.experience, e.wage, e.uid)
 	}
 }
 
