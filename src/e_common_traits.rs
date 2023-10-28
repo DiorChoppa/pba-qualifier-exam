@@ -72,12 +72,13 @@ impl TryFrom<String> for Employee {
 		}
 
 		if store.len() == 4 {
-			let msg = String::from("Wrong data!");
+			let msg: String = String::from("Wrong data!");
+			let name: String = store[0].to_string();
 			let experience: u32 = store[1].parse().expect(&msg);
 			let wage: u32 = store[2].parse().expect(&msg);
 			let uid: u32 = store[3].parse().expect(&msg);
 	
-			Ok (Employee { name: store[0].to_string(), experience, wage, uid })
+			Ok (Employee { name, experience, wage, uid })
 		} else {
 			Err("Wrong number of attributes!")
 		}
@@ -96,7 +97,7 @@ impl From<Employee> for String {
 /// On a scale from 0 - 255, with zero being extremely easy and 255 being extremely hard,
 /// how hard did you find this section of the exam.
 pub fn how_hard_was_this_section() -> u8 {
-	128
+	64
 }
 
 /// This function is not graded. It is just for collecting feedback.
