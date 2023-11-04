@@ -11,16 +11,16 @@
 /// This function takes an iterator of u32 values, squares each value, and returns the sum of the
 /// squares. You may assume that no individual square, nor the entire sum, overflows the u32 type.
 pub fn sum_of_squares(vals: impl Iterator<Item = u32>) -> u32 {
-	todo!()
+	let squares: u32 = vals.map(|x| x.pow(2)).sum();
+	squares
 }
+
 
 /// This function takes an iterator of i32 values, calculates the absolute value of each, and throws
 /// away any values that are greater than 100. The remaining positive values are returned as an
 /// iterator of u32s.
 pub fn bounded_absolute_values(vals: impl Iterator<Item = i32>) -> impl Iterator<Item = u32> {
-	// You should remove the following line (and this comment). It is just there because the
-	// compiler doesn't allow todo!() when the return type is impl Trait
-	Vec::new().into_iter()
+	vals.map(|v| v.abs()).filter(|v| *v <= 100).map(|v| v as u32)
 }
 
 // We allow `unused_mut` only so that there is no build warning on the starter code.
@@ -32,11 +32,12 @@ pub fn bounded_absolute_values(vals: impl Iterator<Item = i32>) -> impl Iterator
 ///
 /// If the input iterator is empty, return None
 /// If there are fewer than n even values left in the input, return as many as possible
-#[allow(unused_mut)]
 pub fn first_n_even(mut vals: impl Iterator<Item = u32>) -> Option<impl Iterator<Item = u32>> {
-	// You should remove the following line (and this comment). It is just there because the
-	// compiler doesn't allow todo!() when the return type is impl Trait
-	Some(Vec::new().into_iter())
+	if let Some(n) = vals.next() {
+		Some(vals.filter(|v| *v % 2 == 0).take(n.try_into().unwrap()))
+	} else {
+		None
+	}
 }
 
 /// Return an "infinite" iterator that yields the squares of the whole numbers.
@@ -44,9 +45,7 @@ pub fn first_n_even(mut vals: impl Iterator<Item = u32>) -> Option<impl Iterator
 ///
 /// The iterator should be bounded only by the u32 type, not by your code
 pub fn square_whole_numbers() -> impl Iterator<Item = u32> {
-	// You should remove the following line (and this comment). It is just there because the
-	// compiler doesn't allow todo!() when the return type is impl Trait
-	Vec::new().into_iter()
+	std::iter::successors(Some(0), |x| Some(x + 1)).map(|x| x * x)
 }
 
 /// An iterator that generates the Fibonacci sequence.
@@ -62,7 +61,27 @@ impl Iterator for Fibonacci {
 	type Item = u32;
 
 	fn next(&mut self) -> Option<u32> {
-		todo!()
+		let next = match (self.prev, self.prev_prev) {
+			(Some(prev), Some(prev_prev)) => {
+				let sum = prev + prev_prev;
+				self.prev_prev = self.prev;
+				self.prev = Some(sum);
+				sum
+			}
+			(Some(prev), None) => {
+				self.prev_prev = Some(0);
+				let sum = prev + 0;
+				self.prev = Some(sum);
+				sum
+			}
+			(None, None) => {
+				self.prev = Some(0);
+				self.prev_prev = Some(1);
+				0
+			}
+			_ => return None
+		};
+		Some(next)
 	}
 }
 
@@ -70,13 +89,13 @@ impl Iterator for Fibonacci {
 /// On a scale from 0 - 255, with zero being extremely easy and 255 being extremely hard,
 /// how hard did you find this section of the exam.
 pub fn how_hard_was_this_section() -> u8 {
-	todo!()
+	32
 }
 
 /// This function is not graded. It is just for collecting feedback.
 /// How much time (in hours) did you spend on this section of the exam?
 pub fn how_many_hours_did_you_spend_on_this_section() -> u8 {
-	todo!()
+	2
 }
 
 #[cfg(test)]
