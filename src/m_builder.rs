@@ -56,24 +56,53 @@ impl Default for EmployeeBuilder {
 
 impl EmployeeBuilder {
 	pub fn name(self, name: String) -> Self {
-		todo!("finish the implementation.");
+		EmployeeBuilder {
+            name: Some(name),
+            uid: self.uid,
+            experience: self.experience,
+            wage: self.wage,
+        }
 	}
 
 	pub fn uid(self, uid: u32) -> Self {
-		todo!("finish the implementation.");
+		EmployeeBuilder {
+            name: self.name,
+            uid: Some(uid),
+            experience: self.experience,
+            wage: self.wage,
+        }
 	}
 
 	pub fn experience(self, experience: u32) -> Self {
-		todo!("finish the implementation.");
+		EmployeeBuilder {
+            name: self.name,
+            uid: self.uid,
+            experience,
+            wage: self.wage,
+        }
 	}
 
 	pub fn wage(self, wage: u32) -> Self {
-		todo!("finish the implementation.");
+		EmployeeBuilder {
+            name: self.name,
+            uid: self.uid,
+            experience: self.experience,
+            wage,
+        }
 	}
 
 	pub fn build(self) -> Result<Employee, ()> {
-		todo!("finish the implementation.");
-	}
+		if let (Some(name), Some(uid)) = (self.name, self.uid) {
+            Ok(Employee {
+                name,
+                uid,
+                experience: self.experience,
+                wage: self.wage,
+            })
+        } else {
+            Err(())
+        }
+    }
 }
 
 // Okay, that was good, but the unfortunate thing about the previous approach is that we will have
@@ -157,25 +186,56 @@ impl Default for TypedEmployeeBuilder<NotNamed, UnIdentified> {
 }
 
 impl<Name, Id> TypedEmployeeBuilder<Name, Id> {
-	pub fn name(self, name: String) -> Self {
-		todo!("finish the implementation. Note that you might need to move some of these functions to a new `impl` blocks with different trait bounds, or change the return type to use `Named` etc.");
-	}
+	pub fn name(self, name: String) -> TypedEmployeeBuilder<Named, UnIdentified> {
+        TypedEmployeeBuilder {
+            experience: self.experience,
+            wage: self.wage,
+            name: Named { name },
+            uid: UnIdentified,
+        }
+    }
 
-	pub fn uid(self, uid: u32) -> Self {
-		todo!("finish the implementation. Note that you might need to move some of these functions to a new `impl` blocks with different trait bounds, or change the return type to use `Named` etc.");
-	}
+	pub fn uid(self, uid: u32) -> TypedEmployeeBuilder<Name, Identified> {
+        TypedEmployeeBuilder {
+            experience: self.experience,
+            wage: self.wage,
+            name: self.name,
+            uid: Identified { uid },
+        }
+    }
 
-	pub fn experience(self, experience: u32) -> Self {
-		todo!("finish the implementation. Note that you might need to move some of these functions to a new `impl` blocks with different trait bounds, or change the return type to use `Named` etc.");
-	}
+	pub fn experience(self, experience: u32) -> TypedEmployeeBuilder<Name, Id> {
+        TypedEmployeeBuilder {
+            experience,
+            wage: self.wage,
+            name: self.name,
+            uid: self.uid,
+        }
+    }
 
-	pub fn wage(self, wage: u32) -> Self {
-		todo!("finish the implementation. Note that you might need to move some of these functions to a new `impl` blocks with different trait bounds, or change the return type to use `Named` etc.");
-	}
+	pub fn wage(self, wage: u32) -> TypedEmployeeBuilder<Name, Id> {
+        TypedEmployeeBuilder {
+            experience: self.experience,
+            wage,
+            name: self.name,
+            uid: self.uid,
+        }
+    }
 
 	pub fn build(self) -> Employee {
-		todo!("finish the implementation. Note that you might need to move some of these functions to a new `impl` blocks with different trait bounds, or change the return type to use `Named` etc.");
-	}
+        Employee {
+            name: match self.name {
+                Named { name } => name,
+                _ => unreachable!("Should never happen"),
+            },
+            uid: match self.uid {
+                Identified { uid } => uid,
+                _ => unreachable!("Should never happen"),
+            },
+            experience: self.experience,
+            wage: self.wage,
+        }
+    }
 }
 
 /// This function is not graded. It is just for collecting feedback.

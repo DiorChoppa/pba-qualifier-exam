@@ -12,9 +12,19 @@
 // let map1: HashMap<u32, u32> = map![1 => 2, 3 => 4, 5 => 6];
 #[macro_export]
 macro_rules! map {
-	( $($todo:tt)* ) => {
-		Default::default()
-	};
+	() => {
+        HashMap::new()
+    };
+
+	( $( $key:expr => $value:expr ),* ) => {
+        {
+            let mut map = HashMap::new();
+			$(
+				map.insert($key, $value);
+			)*
+            map
+        }
+    };
 }
 
 /// Next, write a macro that implements a `get` function on a type.
@@ -56,20 +66,29 @@ impl Get<u32> for Seven {
 
 #[macro_export]
 macro_rules! impl_get {
-	( $($todo:tt)* ) => {};
+    ($( $name:ident : $ty:ty = $val:expr ),* $(;)?) => {
+        $(
+            struct $name;
+            impl Get<$ty> for $name {
+                fn get() -> $ty {
+                    $val
+                }
+            }
+        )*
+    };
 }
 
 /// This function is not graded. It is just for collecting feedback.
 /// On a scale from 0 - 255, with zero being extremely easy and 255 being extremely hard,
 /// how hard did you find this section of the exam.
 pub fn how_hard_was_this_section() -> u8 {
-	todo!()
+	255
 }
 
 /// This function is not graded. It is just for collecting feedback.
 /// How much time (in hours) did you spend on this section of the exam?
 pub fn how_many_hours_did_you_spend_on_this_section() -> u8 {
-	todo!()
+	5
 }
 
 #[cfg(test)]
@@ -87,8 +106,11 @@ mod tests {
 		assert_eq!(macro_generated, expected);
 	}
 
+	#[allow(unused_imports)]
 	#[test]
 	fn impl_get() {
+		use super::Get;
+
 		impl_get!(
 			// should generate `struct Foo` that implements `Get<u32>`
 			Foo: u32 = 10;
@@ -102,6 +124,9 @@ mod tests {
 		// assert_eq!(Foo::get(), 10);
 		// assert_eq!(Bar::get(), 42);
 		// assert_eq!(Baz::get(), 21);
+		// assert_eq!(
+		// 	true, false,
+		// );
 
 		// As an extra, ungraded, challenge, try to make this work.
 		// This is not part of the main problem because it requires the nightly compiler.
