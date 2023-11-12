@@ -66,11 +66,12 @@ impl Get<u32> for Seven {
 
 #[macro_export]
 macro_rules! impl_get {
-    ($( $name:ident : $ty:ty = $val:expr ),* $(;)?) => {
+    ( $($vis:vis $ident:ident: $type:ty = $val:expr);* $(;)?) => {
+		use $crate::k_macros::Get;
         $(
-            struct $name;
-            impl Get<$ty> for $name {
-                fn get() -> $ty {
+			struct $ident;
+            impl Get<$type> for $ident {
+                fn get() -> $type {
                     $val
                 }
             }
@@ -82,7 +83,7 @@ macro_rules! impl_get {
 /// On a scale from 0 - 255, with zero being extremely easy and 255 being extremely hard,
 /// how hard did you find this section of the exam.
 pub fn how_hard_was_this_section() -> u8 {
-	255
+	128
 }
 
 /// This function is not graded. It is just for collecting feedback.
@@ -109,8 +110,6 @@ mod tests {
 	#[allow(unused_imports)]
 	#[test]
 	fn impl_get() {
-		use super::Get;
-
 		impl_get!(
 			// should generate `struct Foo` that implements `Get<u32>`
 			Foo: u32 = 10;
@@ -121,9 +120,9 @@ mod tests {
 		);
 
 		// you should be able to make these work.
-		// assert_eq!(Foo::get(), 10);
-		// assert_eq!(Bar::get(), 42);
-		// assert_eq!(Baz::get(), 21);
+		assert_eq!(Foo::get(), 10);
+		assert_eq!(Bar::get(), 42);
+		assert_eq!(Baz::get(), 21);
 		// assert_eq!(
 		// 	true, false,
 		// );

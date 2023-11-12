@@ -47,13 +47,13 @@ pub trait OutcomeCount {
 
 impl OutcomeCount for Vec<Outcome> {
 	fn ok_count(&self) -> usize {
-		self.iter().filter(|item| matches!(*item, Outcome::Ok)).count()
+		self.iter().filter(|&item| matches!(*item, Outcome::Ok)).count()
 	}
 	fn i_dont_know_count(&self) -> usize {
-		self.iter().filter(|item| matches!(*item, Outcome::IDontKnow)).count()
+		self.iter().filter(|&item| matches!(*item, Outcome::IDontKnow)).count()
 	}
 	fn something_went_wrong_count(&self) -> usize {
-		self.iter().filter(|item| matches!(*item, Outcome::SomethingWentWrong)).count()
+		self.iter().filter(|&item| matches!(*item, Outcome::SomethingWentWrong)).count()
 	}
 }
 
@@ -76,7 +76,7 @@ impl OutcomeCount for Vec<Outcome> {
 /// On a scale from 0 - 255, with zero being extremely easy and 255 being extremely hard,
 /// how hard did you find this section of the exam.
 pub fn how_hard_was_this_section() -> u8 {
-	64
+	63
 }
 
 /// This function is not graded. It is just for collecting feedback.

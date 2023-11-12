@@ -56,53 +56,28 @@ impl Default for EmployeeBuilder {
 
 impl EmployeeBuilder {
 	pub fn name(self, name: String) -> Self {
-		EmployeeBuilder {
-            name: Some(name),
-            uid: self.uid,
-            experience: self.experience,
-            wage: self.wage,
-        }
+		Self { name: Some(name), ..self}
 	}
 
 	pub fn uid(self, uid: u32) -> Self {
-		EmployeeBuilder {
-            name: self.name,
-            uid: Some(uid),
-            experience: self.experience,
-            wage: self.wage,
-        }
+		Self {uid: Some(uid), ..self}
 	}
 
 	pub fn experience(self, experience: u32) -> Self {
-		EmployeeBuilder {
-            name: self.name,
-            uid: self.uid,
-            experience,
-            wage: self.wage,
-        }
+		Self {experience: experience, ..self}
 	}
 
 	pub fn wage(self, wage: u32) -> Self {
-		EmployeeBuilder {
-            name: self.name,
-            uid: self.uid,
-            experience: self.experience,
-            wage,
-        }
+		Self {wage: wage, ..self}
 	}
 
 	pub fn build(self) -> Result<Employee, ()> {
-		if let (Some(name), Some(uid)) = (self.name, self.uid) {
-            Ok(Employee {
-                name,
-                uid,
-                experience: self.experience,
-                wage: self.wage,
-            })
-        } else {
-            Err(())
+		match (self.name, self.uid) {
+            (Some(name), Some(uid)) => 
+            Ok(Employee { name: name, experience: self.experience, wage: self.wage, uid: uid }),
+            _ => Err(()),
         }
-    }
+	}
 }
 
 // Okay, that was good, but the unfortunate thing about the previous approach is that we will have
@@ -186,54 +161,31 @@ impl Default for TypedEmployeeBuilder<NotNamed, UnIdentified> {
 }
 
 impl<Name, Id> TypedEmployeeBuilder<Name, Id> {
-	pub fn name(self, name: String) -> TypedEmployeeBuilder<Named, UnIdentified> {
-        TypedEmployeeBuilder {
-            experience: self.experience,
-            wage: self.wage,
-            name: Named { name },
-            uid: UnIdentified,
-        }
-    }
+	pub fn name(self, name: String) -> TypedEmployeeBuilder<Named, Id> {    //UnIdentified
+		TypedEmployeeBuilder { experience: self.experience, wage: self.experience, name: Named {name}, uid: self.uid }  //UnIdentified
+	}
 
 	pub fn uid(self, uid: u32) -> TypedEmployeeBuilder<Name, Identified> {
-        TypedEmployeeBuilder {
-            experience: self.experience,
-            wage: self.wage,
-            name: self.name,
-            uid: Identified { uid },
-        }
-    }
+		TypedEmployeeBuilder { experience: self.experience, wage: self.wage, name: self.name, uid: Identified {uid} }
+	}
 
 	pub fn experience(self, experience: u32) -> TypedEmployeeBuilder<Name, Id> {
-        TypedEmployeeBuilder {
-            experience,
-            wage: self.wage,
-            name: self.name,
-            uid: self.uid,
-        }
-    }
+		TypedEmployeeBuilder { experience: experience, wage: self.wage, name: self.name, uid: self.uid }
+	}
 
 	pub fn wage(self, wage: u32) -> TypedEmployeeBuilder<Name, Id> {
-        TypedEmployeeBuilder {
-            experience: self.experience,
-            wage,
-            name: self.name,
-            uid: self.uid,
-        }
-    }
+		TypedEmployeeBuilder { experience: self.experience, wage: wage, name: self.name, uid: self.uid }
+	}
 
-	pub fn build(self) -> Employee {
+}
+
+impl TypedEmployeeBuilder<Named, Identified>{
+    pub fn build(self) -> Employee {
         Employee {
-            name: match self.name {
-                Named { name } => name,
-                _ => unreachable!("Should never happen"),
-            },
-            uid: match self.uid {
-                Identified { uid } => uid,
-                _ => unreachable!("Should never happen"),
-            },
+            name: self.name.name,
             experience: self.experience,
             wage: self.wage,
+            uid: self.uid.uid,
         }
     }
 }
@@ -242,11 +194,11 @@ impl<Name, Id> TypedEmployeeBuilder<Name, Id> {
 /// On a scale from 0 - 255, with zero being extremely easy and 255 being extremely hard,
 /// how hard did you find this section of the exam.
 pub fn how_hard_was_this_section() -> u8 {
-	todo!()
+	200
 }
 
 /// This function is not graded. It is just for collecting feedback.
 /// How much time (in hours) did you spend on this section of the exam?
 pub fn how_many_hours_did_you_spend_on_this_section() -> u8 {
-	todo!()
+	3
 }
